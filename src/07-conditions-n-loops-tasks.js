@@ -304,8 +304,10 @@ function isCreditCardNumber(ccn) {
  *   10000 ( 1+0+0+0+0 = 1 ) => 1
  *   165536 (1+6+5+5+3+6 = 26,  2+6 = 8) => 8
  */
-function getDigitalRoot(/* num */) {
-  throw new Error('Not implemented');
+function getDigitalRoot(num) {
+  let digitalRoot = String(num).split('').map(Number).reduce((a, b) => a + b);
+  if (digitalRoot > 9) digitalRoot = getDigitalRoot(digitalRoot);
+  return digitalRoot;
 }
 
 
@@ -330,8 +332,12 @@ function getDigitalRoot(/* num */) {
  *   '{)' = false
  *   '{[(<{[]}>)]}' = true
  */
-function isBracketsBalanced(/* str */) {
-  throw new Error('Not implemented');
+function isBracketsBalanced(str) {
+  let strCopy = str;
+  while (strCopy.includes('[]') || strCopy.includes('()') || strCopy.includes('{}') || strCopy.includes('<>')) {
+    strCopy = strCopy.replace(/(\[])|(\(\))|({})|(<>)/g, '');
+  }
+  return (strCopy.length === 0);
 }
 
 
@@ -355,8 +361,8 @@ function isBracketsBalanced(/* str */) {
  *    365, 4  => '11231'
  *    365, 10 => '365'
  */
-function toNaryString(/* num, n */) {
-  throw new Error('Not implemented');
+function toNaryString(num, n) {
+  return num.toString(n);
 }
 
 
@@ -372,8 +378,20 @@ function toNaryString(/* num, n */) {
  *   ['/web/assets/style.css', '/.bin/mocha',  '/read.me'] => '/'
  *   ['/web/favicon.ico', '/web-scripts/dump', '/verbalizer/logs'] => '/'
  */
-function getCommonDirectoryPath(/* pathes */) {
-  throw new Error('Not implemented');
+function getCommonDirectoryPath(pathes) {
+  const pathesSplit = pathes.map((e) => e.split('/'));
+
+  function checkOverlap(split1, split2) {
+    const overlap = [];
+    for (let i = 0; i < split1.length; i += 1) {
+      if (split1[i] === split2[i]) overlap.push(split1[i]);
+    }
+    return overlap;
+  }
+
+  const commonDir = pathesSplit.reduce((a, b) => checkOverlap(a, b));
+  if (commonDir.length > 0) commonDir.push('');
+  return commonDir.join('/');
 }
 
 
@@ -395,8 +413,18 @@ function getCommonDirectoryPath(/* pathes */) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const multiple = Array(m1.length).fill(0).map(() => Array(m1.length).fill(0));
+  for (let i = 0; i < m1.length; i += 1) {
+    for (let j = 0; j < m2[0].length; j += 1) {
+      let sum = 0;
+      for (let k = 0; k < m2.length; k += 1) {
+        sum += m1[i][k] * m2[k][j];
+      }
+      multiple[i][j] = sum;
+    }
+  }
+  return multiple;
 }
 
 
@@ -430,8 +458,16 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(pos) {
+  if (pos[0][0] && pos[0][0] === pos[0][1] && pos[0][1] === pos[0][2]) return pos[0][0];
+  if (pos[1][0] && pos[1][0] === pos[1][1] && pos[1][1] === pos[1][2]) return pos[1][0];
+  if (pos[2][0] && pos[2][0] === pos[2][1] && pos[2][1] === pos[2][2]) return pos[2][0];
+  if (pos[0][0] && pos[0][0] === pos[1][0] && pos[1][0] === pos[2][0]) return pos[0][0];
+  if (pos[0][1] && pos[0][1] === pos[1][1] && pos[1][1] === pos[2][1]) return pos[0][1];
+  if (pos[0][2] && pos[0][2] === pos[1][2] && pos[1][2] === pos[2][2]) return pos[0][2];
+  if (pos[0][0] && pos[0][0] === pos[1][1] && pos[1][1] === pos[2][2]) return pos[0][0];
+  if (pos[0][2] && pos[0][2] === pos[1][1] && pos[1][1] === pos[2][0]) return pos[0][2];
+  return undefined;
 }
 
 
